@@ -26,6 +26,7 @@ public class SettingPanel : MonoBehaviour {
     public void onClick_ApplyChanges() {
         checkRotateScreen();
         checkBuffEffect();
+        onClick_TriggerPanel();
     }
 
     public void onClick_TriggerPanel() {

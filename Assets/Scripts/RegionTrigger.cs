@@ -13,7 +13,7 @@ public class RegionTrigger : MonoBehaviour {
     private GameObject m_mainTitleTextObj;
 
     protected virtual void Start() {
-        m_mainTitleTextObj = GameObject.FindGameObjectWithTag("MainTitleText");
+        m_mainTitleTextObj = GameObject.FindGameObjectWithTag(Tags.MAIN_TEXT_TITLE);
     }
 
     protected virtual void OnTriggerEnter(Collider other) {
