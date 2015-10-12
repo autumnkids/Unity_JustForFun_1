@@ -2,13 +2,12 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : UnitController {
     public enum CharacterState { MOVING, IDLING }
 
     private static int MOUSE_RIGHT_BUTTON = 1;
     private static Vector3 CAMERA_POS = new Vector3(0, 10, -10);
 
-    public int m_totalHealth;
     #region // Commented: Outdated movement parameters
     // public float m_moveSpeed;
     // public float m_turnSpeed;
@@ -20,7 +19,6 @@ public class PlayerController : MonoBehaviour {
     private CharacterState m_curState;
     private NavMeshAgent m_navAgent;
     private Vector3 m_moveTargetPos;
-    private int m_curHealth;
     private float m_height;
     private bool m_cameraIsFollow;
 
@@ -38,18 +36,16 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void restoreHealth(int amount) {
-        m_curHealth += amount;
-        m_curHealth = Mathf.Min(m_curHealth, m_totalHealth);
+    public override void restoreHealth(int amount) {
+        base.restoreHealth(amount);
         healthBarFillAmount = m_curHealth * 1f / m_totalHealth;
         if (m_buffTextController && m_curHealth < m_totalHealth) {
             m_buffTextController.genBuffText("+" + amount.ToString());
         }
     }
 
-    public void damage(int d) {
-        m_curHealth -= d;
-        m_curHealth = Mathf.Max(0, m_curHealth);
+    public override void damage(int d) {
+        base.damage(d);
         healthBarFillAmount = m_curHealth * 1f / m_totalHealth;
         if (m_buffTextController && m_curHealth > 0) {
             m_buffTextController.genBuffText("-" + d.ToString());
@@ -66,17 +62,16 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void Start() {
+    protected override void Start() {
+        base.Start();
         m_curState = CharacterState.IDLING;
         m_navAgent = GetComponent<NavMeshAgent>();
         m_moveTargetPos = Vector3.zero;
         m_height = transform.position.y;
-        m_totalHealth = Mathf.Max(1, m_totalHealth);
-        m_curHealth = m_totalHealth;
     }
 
     void Update() {
-        if (Input.GetMouseButtonUp(MOUSE_RIGHT_BUTTON)) {
+        if (Input.GetMouseButton(MOUSE_RIGHT_BUTTON)) {
             Vector3 mousePos = Input.mousePosition;
             Ray mouseRay = Camera.main.ScreenPointToRay(mousePos);
             #region // Commented: Manual calculating target position
@@ -96,6 +91,10 @@ public class PlayerController : MonoBehaviour {
 
             m_curState = CharacterState.MOVING;
         }
+
+        float x = Input.GetAxis("Mouse X");
+        float y = Input.GetAxis("Mouse Y");
+        print(new Vector2(x, y));
 
         // State judge
         if (m_curState == CharacterState.MOVING) {

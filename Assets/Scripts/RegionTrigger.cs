@@ -17,13 +17,11 @@ public class RegionTrigger : MonoBehaviour {
     }
 
     protected virtual void OnTriggerEnter(Collider other) {
-        if (m_mainTitleTextObj && m_hasTriggerText) {
+        if (m_mainTitleTextObj && m_hasTriggerText && other.tag == Tags.PLAYER) {
             TriggerText triggerText = m_mainTitleTextObj.GetComponent<TriggerText>();
             if (triggerText) {
                 triggerText.showText(m_regionName);
             }
         }
     }
-
-    protected virtual void OnTriggerStay(Collider other) { }
 }
